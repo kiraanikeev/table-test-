@@ -3,7 +3,7 @@ import DataPage from './components/DataPage';
 import productsData from './data/products.json';
 import pricePlansData from './data/pricePlans.json';
 import pagesData from './data/pages.json';
-
+import { Product, PricePlan, Page } from './types';
 const App = () => {
   return (
       <div>
