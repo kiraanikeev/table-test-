@@ -1,34 +1,14 @@
-interface TableProps<T extends DataObject> {
+import { useFlattenOptions, IDataObject } from "../hooks/useFlattenOptions";
+
+
+interface TableProps<T extends IDataObject> {
   data: T[];
   onEdit: (item: T) => void;
 }
 
-interface DataObject {
-  [key: string]: any;
-}
+const Table = <T extends IDataObject>({ data, onEdit }: TableProps<T>) => {
+  const flattenedData = useFlattenOptions(data);
 
-const Table = <T extends DataObject>({ data, onEdit }: TableProps<T>) => {
-  function flattenOptions(arr: DataObject[]): DataObject[] {
-    const flattenObject = (obj: DataObject): DataObject => {
-      const newObj: DataObject = {};
-
-      for (const key in obj) {
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-          const innerKeys = flattenObject(obj[key]);
-          for (const innerKey in innerKeys) {
-            newObj[`${key}.${innerKey}`] = innerKeys[innerKey];
-          }
-        } else {
-          newObj[key] = obj[key];
-        }
-      }
-      return newObj;
-    };
-
-    return arr.map(item => flattenObject(item));
-  }
-
-  const flattenedData = flattenOptions(data);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -72,5 +52,4 @@ const Table = <T extends DataObject>({ data, onEdit }: TableProps<T>) => {
     </div>
   );
 };
-
 export default Table;
