@@ -3,7 +3,6 @@ import DataPage from './components/DataPage';
 import productsData from './data/products.json';
 import pricePlansData from './data/pricePlans.json';
 import pagesData from './data/pages.json';
-import { Product, PricePlan, Page } from './types';
 
 const App = () => {
   return (
@@ -14,15 +13,15 @@ const App = () => {
           <NavLink to="/pages" className="mr-4">Pages</NavLink>
         </nav>
         <Routes>
-            <Route path="/products" element={<DataPage<Product>
+            <Route path="/products" element={<DataPage
             data={productsData}
             fieldToEdit="name"
           />} />
-          <Route path="/price-plans" element={<DataPage<PricePlan>
+          <Route path="/price-plans" element={<DataPage
             data={pricePlansData}
             fieldToEdit="description"
           />} />
-          <Route path="/pages" element={<DataPage<Page>
+          <Route path="/pages" element={<DataPage
             data={pagesData}
             fieldToEdit="title"
           />} />

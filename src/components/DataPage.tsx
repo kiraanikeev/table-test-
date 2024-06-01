@@ -23,7 +23,6 @@ const DataPage = <T extends { id: number | string; active: boolean }>({ data, fi
     setItems((prevItems) => prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item)));
     setEditItem(null);
   }
-console.log('items',items)
   const filteredData = items.filter((item) =>
     Object.values(item).some(
       (value) => typeof value === 'string' && value.includes(filter)

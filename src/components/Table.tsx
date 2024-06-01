@@ -1,19 +1,22 @@
-interface TableProps<T> {
+interface TableProps<T extends DataObject> {
   data: T[];
   onEdit: (item: T) => void;
 }
 
-const Table = <T,>({ data, onEdit }: TableProps<T>) => {
-function flattenOptions(arr) {
-  return arr.map(item => {
-    const flattenObject = obj => {
-      const newObj = {};
-   
+interface DataObject {
+  [key: string]: any;
+}
+
+const Table = <T extends DataObject>({ data, onEdit }: TableProps<T>) => {
+  function flattenOptions(arr: DataObject[]): DataObject[] {
+    const flattenObject = (obj: DataObject): DataObject => {
+      const newObj: DataObject = {};
+
       for (const key in obj) {
         if (typeof obj[key] === 'object' && obj[key] !== null) {
           const innerKeys = flattenObject(obj[key]);
           for (const innerKey in innerKeys) {
-            newObj[innerKey] = innerKeys[innerKey];
+            newObj[`${key}.${innerKey}`] = innerKeys[innerKey];
           }
         } else {
           newObj[key] = obj[key];
@@ -22,27 +25,25 @@ function flattenOptions(arr) {
       return newObj;
     };
 
-    return flattenObject(item);
-  });
-}
+    return arr.map(item => flattenObject(item));
+  }
 
-const flattenedData = flattenOptions(data);
+  const flattenedData = flattenOptions(data);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead className="bg-gray-100">
-
-         <tr>
+          <tr>
             {Object.keys(flattenedData[0]).map((keyTable) => (
               <th
-                key={ Math.random().toString(16).slice(2) + new Date().getTime().toString(36)}
+                key={keyTable}
                 className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-600"
               >
                 {keyTable}
               </th>
             ))}
             <th className="text-left py-3 px-4 uppercase font-semibold text-sm text-gray-600">
-               _
+              
             </th>
           </tr>
         </thead>
@@ -50,8 +51,8 @@ const flattenedData = flattenOptions(data);
           {flattenedData.map((item, index) => (
             <tr key={index} className="border-t border-gray-200">
               {Object.keys(item).map((col) => (
-                <td key={Math.random().toString(16).slice(2) + new Date().getTime().toString(36)} className="py-3 px-4">
-               {typeof item[col] === 'boolean'
+                <td key={col} className="py-3 px-4">
+                  {typeof item[col] === 'boolean'
                     ? item[col] ? 'Active' : 'Inactive'
                     : item[col]}
                 </td>
@@ -59,7 +60,7 @@ const flattenedData = flattenOptions(data);
               <td className="py-3 px-4">
                 <button
                   className="text-blue-600 hover:text-blue-800"
-                  onClick={() => onEdit(item)}
+                  onClick={() => onEdit(data[index])}
                 >
                   Edit
                 </button>
